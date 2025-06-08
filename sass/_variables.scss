@@ -1,0 +1,70 @@
+// =========================================
+// Design System Variables
+// =========================================
+
+// Colors
+$color-primary: #7154AA;
+$color-accent: #178e28;
+$color-text-light: #ACA4F6;
+$color-white: #ffffff;
+$color-black: #000000;
+$color-dark-bg: #2a2a2a;
+$color-code-text: #f8f8f2;
+$color-border: #333;
+$color-tag-bg: #178e28;
+$color-error: #ff4444;
+$color-success: #44ff44;
+
+// Layout Dimensions
+$header-height: 45px;
+$footer-height: 30px;
+$header-height-mobile: 60px;
+$max-content-width: 65em;
+$max-blog-width: 800px;
+
+// Typography
+$font-family: storopia, sans-serif;
+$font-family-mono: 'JetBrains Mono', 'Fira Code', 'Source Code Pro', 'Consolas', 'Monaco', 'Courier New', monospace;
+$font-size-base: 16px;
+$font-size-code: 0.85em;
+$font-size-small: 0.9em;
+$font-size-large: 1.1em;
+$font-size-xlarge: 1.2em;
+
+$line-height-base: 1.6;
+$line-height-tight: 1.4;
+$line-height-loose: 1.7;
+
+// Spacing
+$spacing-xs: 5px;
+$spacing-sm: 10px;
+$spacing-md: 20px;
+$spacing-lg: 40px;
+$spacing-xl: 60px;
+
+// Border Radius
+$border-radius: 3px;
+$border-radius-large: 5px;
+
+// Shadows
+$text-shadow: 1px 1px $color-black;
+$box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-slow: 0.3s ease-out;
+
+// Z-Index Scale
+$z-index-dropdown: 100;
+$z-index-sticky: 500;
+$z-index-fixed: 1000;
+$z-index-modal: 2000;
+
+// Breakpoints
+$breakpoint-mobile: 768px;
+$breakpoint-tablet: 1024px;
+$breakpoint-desktop: 1200px;
+
+// Background Effects
+$backdrop-blur: blur(4px);
+$background-alpha: 0.8;

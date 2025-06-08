@@ -1,0 +1,201 @@
+// =========================================
+// Layout Structure
+// =========================================
+
+// Main Container
+.outer {
+    min-height: 100vh;
+}
+
+.inner {
+    min-height: 100vh;
+}
+
+// Fixed Header
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: $header-height;
+    z-index: $z-index-fixed;
+    background-color: rgba($color-black, $background-alpha);
+    border-bottom: 2px solid $color-accent;
+    backdrop-filter: $backdrop-blur;
+    -webkit-backdrop-filter: $backdrop-blur;
+    
+    @media (max-width: $breakpoint-mobile) {
+        height: $header-height-mobile;
+    }
+}
+
+// Fixed Footer
+.footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: $footer-height;
+    z-index: $z-index-fixed;
+    background-color: rgba($color-black, $background-alpha);
+    border-top: 2px solid $color-accent;
+    color: $color-text-light;
+    backdrop-filter: $backdrop-blur;
+    -webkit-backdrop-filter: $backdrop-blur;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+    p {
+        margin: 0;
+        font-size: $font-size-small;
+    }
+    
+    a {
+        color: $color-text-light;
+        
+        &:hover {
+            color: $color-accent;
+        }
+    }
+}
+
+// Main Content Area
+.content {
+    margin-top: $spacing-xs;
+    margin-bottom: $footer-height;
+    min-height: calc(100vh - #{$header-height} - #{$footer-height});
+    padding: $spacing-md;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: $max-content-width;
+    margin-left: auto;
+    margin-right: auto;
+    
+    // Hide scrollbars but keep functionality
+    scrollbar-width: none;
+    
+    &::-webkit-scrollbar {
+        display: none;
+    }
+    
+    @media (max-width: $breakpoint-mobile) {
+        margin-top: $header-height-mobile;
+        padding: $spacing-sm;
+    }
+}
+
+// Notification Area
+.erin {
+    margin-top: $header-height;
+    padding: $spacing-sm 0;
+    text-align: center;
+    
+    p {
+        margin: 0;
+        padding: $spacing-sm $spacing-md;
+        background-color: rgba($color-primary, 0.2);
+        border-radius: $border-radius;
+        border: 1px solid $color-primary;
+    }
+}
+
+// Homepage Specific
+.pfp {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: $spacing-md;
+    
+    img {
+        max-width: 200px;
+        height: auto;
+    }
+}
+
+.content-1 {
+    margin: $spacing-md 0;
+    font-size: 18px;
+    text-align: center;
+    
+    a {
+        margin: 0 $spacing-xs;
+        color: $color-primary;
+        font-weight: bold;
+        
+        &:hover {
+            color: $color-accent;
+        }
+    }
+    
+    @media (max-width: $breakpoint-mobile) {
+        font-size: 16px;
+    }
+}
+
+// Content Typography
+.full-post {
+    max-width: 100%;
+    text-align: left;
+    
+    > :first-child {
+        color: $color-primary;
+        text-align: center;
+        padding: 0;
+    }
+    
+    h1, h2, h3 {
+        margin-top: 2em;
+        margin-bottom: 1em;
+        
+        &:first-child {
+            margin-top: 0;
+        }
+    }
+    
+    p {
+        margin-bottom: 1em;
+        line-height: $line-height-base;
+    }
+    
+    ul, ol {
+        margin-bottom: 1em;
+    }
+    
+    li {
+        margin-bottom: 0.5em;
+        line-height: $line-height-tight;
+    }
+    
+    blockquote {
+        color: #CCC;
+        border-left: 2px solid #CCC;
+    }
+    
+    code {
+        border: none;
+    }
+}
+
+// Print Styles
+@media print {
+    .header, .footer {
+        position: static;
+        background: transparent;
+        backdrop-filter: none;
+    }
+    
+    .content {
+        margin: 0;
+        padding: 0;
+        max-width: none;
+    }
+    
+    .pfp img {
+        max-width: 100px;
+    }
+}

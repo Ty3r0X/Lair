@@ -1,0 +1,215 @@
+// =========================================
+// Navigation Components
+// =========================================
+
+.menu-wrapper {
+    height: 100%;
+}
+
+.iheader {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 $spacing-md;
+    
+    ul, li {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+}
+
+// Logo
+.iheader .logo {
+    font-size: $font-size-large;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: color $transition-fast;
+
+    .logo-eye {
+      height: 24px;
+      width: auto;
+      flex-shrink: 0;
+    }
+
+    .logo-text {
+      color: $color-primary;
+      font-weight: bold;
+    }
+    
+    &:hover {
+        color: $color-accent;
+    }
+}
+
+// Desktop Menu
+.iheader .menu {
+    display: flex;
+    height: fit-content;
+    
+    li {
+        a {
+            display: flex;
+            align-items: center;
+            padding: 0 10px;
+            height: 100%;
+            transition: background-color $transition-fast;
+            color: $color-white;
+            
+            &:hover {
+                background-color: rgba($color-white, 0.1);
+                color: $color-white;
+            }
+        }
+    }
+}
+
+// Mobile Menu Button
+.iheader .menu-btn {
+    display: none;
+}
+
+.iheader .menu-icon {
+    display: none;
+    cursor: pointer;
+    padding: 15px;
+    user-select: none;
+    
+    .navicon {
+        background: $color-white;
+        display: block;
+        height: 2px;
+        position: relative;
+        transition: background $transition-fast;
+        width: 18px;
+        
+        &:before,
+        &:after {
+            background: $color-white;
+            content: '';
+            display: block;
+            height: 100%;
+            position: absolute;
+            transition: all $transition-fast;
+            width: 100%;
+        }
+        
+        &:before {
+            top: 5px;
+        }
+        
+        &:after {
+            top: -5px;
+        }
+    }
+}
+
+// Mobile Menu Animations
+.iheader .menu-btn:checked {
+    ~ .menu {
+        max-height: 100vh;
+    }
+    
+    ~ .menu-icon .navicon {
+        background: transparent;
+        
+        &:before {
+            transform: rotate(-45deg);
+            top: 0;
+        }
+        
+        &:after {
+            transform: rotate(45deg);
+            top: 0;
+        }
+    }
+}
+
+// Mobile Responsive
+@media (max-width: $breakpoint-mobile) {
+    .iheader {
+        .menu {
+            position: fixed;
+            top: $header-height-mobile;
+            left: 0;
+            right: 0;
+            flex-direction: column;
+            background-color: rgba($color-black, $background-alpha);
+            backdrop-filter: $backdrop-blur;
+            -webkit-backdrop-filter: $backdrop-blur;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height $transition-slow;
+            box-shadow: 0 4px 6px rgba($color-black, 0.3);
+            
+            li {
+                a {
+                    padding: 15px $spacing-md;
+                    border-bottom: 1px solid rgba($color-white, 0.1);
+                    height: auto;
+                    
+                    &:last-child {
+                        border-bottom: none;
+                    }
+                }
+            }
+        }
+        
+        .menu-icon {
+            display: block;
+        }
+        
+        .logo {
+            font-size: $font-size-large;
+        }
+    }
+}
+
+// Navigation Helpers
+.nav-link {
+    position: relative;
+    
+    &.active {
+        color: $color-accent !important;
+        
+        &:after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 2px;
+            background-color: $color-accent;
+        }
+    }
+}
+
+// Breadcrumb Navigation
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    margin-bottom: $spacing-md;
+    font-size: $font-size-small;
+    color: $color-text-light;
+    
+    a {
+        color: $color-text-light;
+        
+        &:hover {
+            color: $color-accent;
+        }
+    }
+    
+    .separator {
+        margin: 0 $spacing-xs;
+        color: $color-border;
+    }
+    
+    .current {
+        color: $color-white;
+        font-weight: bold;
+    }
+}

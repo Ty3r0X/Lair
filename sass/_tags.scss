@@ -1,0 +1,217 @@
+// =========================================
+// Tag System
+// =========================================
+
+// Tag Styles
+.tag {
+    display: inline-block;
+    background-color: $color-tag-bg;
+    color: $color-white;
+    padding: 2px 8px;
+    margin-right: 0.5em;
+    margin-bottom: 0.25em;
+    border-radius: $border-radius;
+    font-size: 0.8em;
+    text-shadow: none;
+    text-decoration: none;
+    transition: all $transition-fast;
+    border: 1px solid transparent;
+    
+    &:hover {
+        background-color: $color-primary;
+        border-color: $color-primary;
+        transform: translateY(-1px);
+    }
+    
+    &:last-child {
+        margin-right: 0;
+    }
+}
+
+// Tags Container
+.tags {
+    margin-top: 0.5em;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25em;
+    
+    // Special styling for tag links
+    a.tag {
+        color: $color-white;
+        
+        &:hover {
+            color: $color-white;
+        }
+    }
+}
+
+// Tag Pages Overview
+.tags-overview {
+    width: 100%;
+    max-width: $max-blog-width;
+    text-align: center;
+    
+    h1 {
+        margin-bottom: 1em;
+        font-size: 2.5em;
+    }
+    
+    > p {
+        font-size: $font-size-large;
+        color: $color-text-light;
+        margin-bottom: 2em;
+    }
+}
+
+// Tag Cloud
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1em;
+    margin: 2em 0;
+    padding: 2em;
+    background-color: rgba($color-primary, 0.05);
+    border-radius: $border-radius-large;
+    border: 1px solid rgba($color-primary, 0.2);
+}
+
+.tag-item {
+    margin: 0.25em;
+    
+    .tag-link {
+        text-decoration: none;
+        color: inherit;
+        display: inline-flex;
+        align-items: center;
+        transition: transform $transition-fast;
+        
+        &:hover {
+            transform: scale(1.05);
+            
+            .tag {
+                background-color: $color-primary;
+            }
+        }
+    }
+}
+
+.tag-count {
+    color: $color-text-light;
+    font-size: 0.9em;
+    margin-left: 0.5em;
+    font-weight: bold;
+    
+    &:before {
+        content: '(';
+    }
+    
+    &:after {
+        content: ')';
+    }
+}
+
+// Individual Tag Page
+.tag-description {
+    text-align: center;
+    margin-bottom: 2em;
+    font-size: $font-size-large;
+    padding: 1em;
+    background-color: rgba($color-primary, 0.1);
+    border-radius: $border-radius;
+    border-left: 4px solid $color-primary;
+    
+    .tag {
+        font-size: 1em;
+        margin: 0 0.5em;
+    }
+}
+
+// Navigation Links for Tag Pages
+.navigation-links {
+    text-align: center;
+    margin-top: 3em;
+    padding-top: 2em;
+    border-top: 1px solid $color-border;
+    
+    a {
+        color: $color-text-light;
+        margin: 0 0.5em;
+        transition: color $transition-fast;
+        display: inline-flex;
+        align-items: center;
+        padding: $spacing-xs $spacing-sm;
+        border-radius: $border-radius;
+        
+        &:hover {
+            color: $color-accent;
+            background-color: rgba($color-accent, 0.1);
+        }
+    }
+    
+    // Separator between links
+    span {
+        color: $color-border;
+        margin: 0 $spacing-xs;
+    }
+}
+
+// No Tags Message
+.no-tags {
+    text-align: center;
+    font-style: italic;
+    color: $color-text-light;
+    margin: 3em 0;
+    padding: 2em;
+    border: 2px dashed $color-border;
+    border-radius: $border-radius-large;
+    
+    p {
+        margin: 0;
+        font-size: $font-size-large;
+    }
+}
+
+// Tag-specific responsive design
+@media (max-width: $breakpoint-mobile) {
+    .tag-cloud {
+        gap: 0.5em;
+        padding: 1em;
+    }
+    
+    .tag-item {
+        margin: 0.125em;
+    }
+    
+    .navigation-links {
+        a {
+            display: block;
+            margin: 0.25em 0;
+        }
+        
+        span {
+            display: none;
+        }
+    }
+    
+    .tags-overview h1 {
+        font-size: 2em;
+    }
+}
+
+// Tag popularity sizing (optional enhancement)
+.tag {
+    &.tag-popular {
+        font-size: 1em;
+        padding: 4px 12px;
+    }
+    
+    &.tag-featured {
+        background: linear-gradient(45deg, $color-primary, $color-accent);
+        font-weight: bold;
+        
+        &:hover {
+            background: linear-gradient(45deg, $color-accent, $color-primary);
+        }
+    }
+}

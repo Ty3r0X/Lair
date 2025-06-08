@@ -1,0 +1,374 @@
+// =========================================
+// Responsive Design
+// =========================================
+
+// Responsive Mixins
+@mixin mobile {
+    @media (max-width: $breakpoint-mobile) {
+        @content;
+    }
+}
+
+@mixin tablet {
+    @media (min-width: #{$breakpoint-mobile + 1px}) and (max-width: $breakpoint-tablet) {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media (min-width: #{$breakpoint-tablet + 1px}) {
+        @content;
+    }
+}
+
+@mixin mobile-up {
+    @media (min-width: $breakpoint-mobile) {
+        @content;
+    }
+}
+
+@mixin tablet-up {
+    @media (min-width: $breakpoint-tablet) {
+        @content;
+    }
+}
+
+// Mobile Optimizations
+@include mobile {
+    // Layout adjustments
+    .content {
+        margin-top: $header-height-mobile;
+        padding: $spacing-sm;
+        min-height: calc(100vh - #{$header-height-mobile} - #{$footer-height});
+    }
+    
+    // Typography scaling
+    h1 { font-size: 2em; }
+    h2 { font-size: 1.8em; }
+    h3 { font-size: 1.5em; }
+    h4 { font-size: 1.3em; }
+    
+    .big {
+        font-size: 36px;
+    }
+    
+    // Content adjustments
+    .blog-posts,
+    .blog-post,
+    .tags-overview {
+        max-width: 100%;
+        padding: 0;
+    }
+    
+    .post-preview {
+        margin-bottom: 2em;
+        padding-bottom: 1.5em;
+        
+        h2 {
+            font-size: 1.5em;
+        }
+    }
+    
+    .post-header h1 {
+        font-size: 2em;
+        line-height: 1.2;
+    }
+    
+    .post-content {
+        font-size: 0.95em;
+        
+        h2 {
+            font-size: 1.6em;
+        }
+        
+        h3 {
+            font-size: 1.3em;
+        }
+        
+        pre {
+            font-size: 0.8em;
+            padding: 0.8em;
+            overflow-x: auto;
+        }
+        
+        table {
+            font-size: 0.8em;
+            
+            th, td {
+                padding: $spacing-xs;
+            }
+        }
+    }
+    
+    .post-navigation {
+        flex-direction: column;
+        gap: $spacing-sm;
+        
+        .nav-next {
+            text-align: left;
+        }
+        
+        a {
+            padding: $spacing-sm;
+            font-size: 0.9em;
+        }
+    }
+    
+    // Form adjustments
+    textarea {
+        width: 95vw;
+        height: 40vh;
+    }
+    
+    input, textarea {
+        font-size: 16px; // Prevent zoom on iOS
+    }
+    
+    // Card adjustments
+    .card {
+        margin: $spacing-sm auto;
+        padding: $spacing-md;
+        max-width: calc(100vw - #{$spacing-md * 2});
+    }
+    
+    // Tag cloud responsive
+    .tag-cloud {
+        gap: 0.5em;
+        padding: 1em;
+        margin: 1em 0;
+    }
+    
+    .tag-item {
+        margin: 0.125em;
+        
+        .tag {
+            font-size: 0.75em;
+            padding: 1px 6px;
+        }
+    }
+    
+    // Navigation links stack on mobile
+    .navigation-links {
+        a {
+            display: block;
+            margin: 0.25em 0;
+            padding: $spacing-sm;
+        }
+        
+        span {
+            display: none;
+        }
+    }
+    
+    // Content-specific mobile adjustments
+    .content-1 {
+        font-size: 16px;
+        
+        a {
+            display: inline-block;
+            margin: $spacing-xs 0;
+            padding: $spacing-xs $spacing-sm;
+            background-color: rgba($color-primary, 0.2);
+            border-radius: $border-radius;
+        }
+    }
+    
+    .pfp img {
+        max-width: 150px;
+    }
+    
+    // Meta information stacking
+    .post-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: $spacing-xs;
+        
+        .tags {
+            margin-top: $spacing-xs;
+        }
+    }
+    
+    // Blog intro responsive
+    .blog-intro {
+        font-size: 1em;
+        margin-bottom: 2em;
+        padding: 0 $spacing-sm;
+    }
+    
+    // Ensure touch targets are large enough
+    a, button, .tag, .btn {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+// Tablet Optimizations
+@include tablet {
+    .content {
+        padding: $spacing-md;
+        max-width: 90%;
+    }
+    
+    .blog-posts,
+    .blog-post {
+        max-width: 90%;
+    }
+    
+    .post-content {
+        font-size: 1em;
+    }
+    
+    .tag-cloud {
+        gap: 0.8em;
+    }
+}
+
+// Desktop Optimizations
+@include desktop {
+    .content {
+        padding: $spacing-lg $spacing-md;
+    }
+    
+    // Enhanced hover effects for desktop
+    .post-preview {
+        &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba($color-primary, 0.2);
+        }
+    }
+    
+    .tag:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 2px 8px rgba($color-tag-bg, 0.3);
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 16px rgba($color-primary, 0.3);
+    }
+    
+    // Show additional content on larger screens
+    .desktop-only {
+        display: block;
+    }
+}
+
+// High DPI / Retina Displays
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    // Sharper borders and shadows
+    .tag, .btn, .card {
+        border-width: 1px;
+    }
+    
+    // Optimize images for high DPI
+    img {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+}
+
+// Landscape Phone Orientation
+@media (max-width: $breakpoint-mobile) and (orientation: landscape) {
+    .header {
+        height: 50px;
+    }
+    
+    .content {
+        margin-top: 50px;
+        padding: $spacing-sm;
+    }
+    
+    .post-header h1 {
+        font-size: 1.8em;
+    }
+}
+
+// Print Optimizations
+@media print {
+    * {
+        color: black !important;
+        background: white !important;
+        text-shadow: none !important;
+    }
+    
+    .header,
+    .footer,
+    .navigation-links,
+    .post-navigation,
+    .back-to-blog {
+        display: none;
+    }
+    
+    .content {
+        margin: 0;
+        padding: 0;
+        max-width: none;
+    }
+    
+    .post-content {
+        font-size: 12pt;
+        line-height: 1.4;
+    }
+    
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+    
+    .post-preview,
+    .tag-cloud {
+        page-break-inside: avoid;
+    }
+    
+    a {
+        text-decoration: underline;
+    }
+    
+    a[href]:after {
+        content: " (" attr(href) ")";
+        font-size: 0.8em;
+        color: #666;
+    }
+}
+
+// Accessibility: Reduced Motion
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .post-preview:hover,
+    .tag:hover,
+    .card:hover {
+        transform: none;
+    }
+}
+
+// Dark Mode Support (if user prefers dark mode)
+@media (prefers-color-scheme: dark) {
+    // Already dark by default, but could add variations
+    body {
+        background-image: url("../images/bg-dark.gif");
+    }
+}
+
+// High Contrast Mode
+@media (prefers-contrast: high) {
+    .tag {
+        border: 2px solid $color-white;
+    }
+    
+    .post-preview {
+        border: 1px solid $color-white;
+        padding: $spacing-md;
+        margin-bottom: $spacing-lg;
+    }
+    
+    a {
+        text-decoration: underline;
+    }
+}
