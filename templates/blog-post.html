@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block description %}{{ page.description | default(value=page.summary) | default(value=config.description) }}{% endblock description %}
+
+{% block extra_head %}
+    {% if page.extra.ascii_art %}
+    <!-- 
+{{ page.extra.ascii_art | safe }}
+    -->
+    {% endif %}
+{% endblock extra_head %}
+
+{% block content %}
+    <article class="blog-post">
+        <header class="post-header">
+            <h1>{{ page.title }}</h1>
+            
+            <div class="post-meta">
+                <time datetime="{{ page.date }}">{{ page.date | date(format="%B %d, %Y") }}</time>
+                {% if page.reading_time %}
+                <span class="reading-time">{{ page.reading_time }} min read</span>
+                {% endif %}
+                {% if page.taxonomies.tags %}
+                <div class="tags">
+                    {% for tag in page.taxonomies.tags %}
+                    <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="tag">{{ tag }}</a>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </header>
+        
+        <div class="post-content">
+            {{ page.content | safe }}
+        </div>
+        
+        <footer class="post-footer">
+            <div class="post-navigation">
+                {% if page.earlier %}
+                <div class="nav-previous">
+                    <a href="{{ page.earlier.permalink }}">← {{ page.earlier.title }}</a>
+                </div>
+                {% endif %}
+                
+                {% if page.later %}
+                <div class="nav-next">
+                    <a href="{{ page.later.permalink }}">{{ page.later.title }} →</a>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="back-to-blog">
+                <a href="/blog/">Back to Blog</a>
+            </div>
+        </footer>
+    </article>
+{% endblock content %}

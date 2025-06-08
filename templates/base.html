@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- VGhlIHdvcmxkIGlzIGdydWVzb21lLiBBbG9uZSwgd2l0aCBhcyBtdWNoIHBvd2VyIGFzIEkgY2Fu
+IHdpdGhvbGQsIEkgd2lsbCBwcmV2YWlsIGluIHRoZSBkYXJrbmVzcy4K -->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html lang="en-us" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <title>{% block title %}{{ config.title }}{% endblock title %}</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}" />
+    <meta name="author" content="{{ config.author }}" />
+   <link href="{{ get_url(path='main.css') }}" rel="stylesheet" type="text/css" /> 
+    {% block extra_head %}{% endblock extra_head %}
+</head>
+<body class="{% if section and not section.ancestors %}page-home{% elif page and page.slug == 'about' %}page-about{% else %}page-other{% endif %}">
+    <div class="outer">
+        <div class="inner">
+            <!-- Header with navigation -->
+            <div class="header">
+                <div class="menu-wrapper">
+                    <div class="iheader">
+                        <a class="logo" href="{{ get_url(path='@/_index.md') }}">
+                          <img src="{{ get_url(path='images/ty3r0x_eye_svg.svg') }}" alt="Ty3r0X Eye" class="logo-eye" />
+                          <span class="logo-text">{{ config.title }}</span>
+                        </a>
+                        <input class="menu-btn" id="menu-btn" type="checkbox" />
+                        <label class="menu-icon" for="menu-btn">
+                            <span class="navicon"></span>
+                        </label>
+                        <ul class="menu">
+                            {% for link in config.extra.nav_links %}
+                            <li><a href="{{ link.url }}">{{ link.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Page-specific notification area -->
+            {% block notification %}{% endblock notification %}
+            
+            <!-- Main content area -->
+            <div class="content">
+                {% block content %}{% endblock content %}
+            </div>
+            
+            <!-- Footer -->
+            <div class="footer">
+                <p>
+                    {% for link in config.extra.footer_links %}
+                        <a href="{{ link.url }}">{{ config.author }}</a>
+                        {% if not loop.last %} | {% endif %}
+                    {% endfor %}
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    {% block extra_body %}{% endblock extra_body %}
+</body>
+</html>

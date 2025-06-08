@@ -1,0 +1,209 @@
+// =========================================
+// Base Styles and Typography
+// =========================================
+
+// Font Loading
+@font-face {
+    font-family: storopia;
+    src: url(../fonts/font.woff) format('woff');
+    font-display: swap;
+}
+
+// Reset and Base Elements
+* {
+    font-family: $font-family;
+    box-sizing: border-box;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: $color-black;
+    min-height: 100vh;
+    font-size: $font-size-base;
+}
+
+body {
+    color: $color-white;
+    line-height: $line-height-base;
+}
+
+body.page-home,
+body.page-about {
+    background: url("../images/bg.gif");  // Animated background for home & about
+}
+
+// Typography
+h1, h2, h3, h4, h5, h6 {
+    color: $color-primary;
+    text-shadow: $text-shadow;
+    line-height: $line-height-tight;
+    
+    &:first-child {
+        margin-top: 0;
+    }
+}
+
+h1 { font-size: 2.5em; margin: 0.67em 0; }
+h2 { font-size: 2em; margin: 0.75em 0; }
+h3 { font-size: 1.5em; margin: 0.83em 0; }
+h4 { font-size: 1.2em; margin: 1em 0; }
+h5 { font-size: 1em; margin: 1.17em 0; }
+h6 { font-size: 0.9em; margin: 1.33em 0; }
+
+p, b, li, a {
+    text-shadow: $text-shadow;
+}
+
+p {
+    margin-bottom: 1em;
+    line-height: $line-height-base;
+}
+
+// Links
+a {
+    color: $color-white;
+    text-decoration: none;
+    outline: none;
+    word-break: break-word;
+    transition: color $transition-fast;
+    
+    &:hover {
+        color: $color-accent;
+    }
+}
+
+// Lists
+ul, ol {
+    margin: 0 0 1em $spacing-md;
+    padding: 0;
+    
+    li {
+        margin-bottom: 0.5em;
+        line-height: $line-height-tight;
+    }
+}
+
+// Blockquotes
+blockquote {
+    color: #CCC;
+    border-left: 3px solid $color-primary;
+    margin: 1.5em 0;
+    padding-left: 1em;
+    font-style: italic;
+    
+    &:first-child {
+        margin-top: 0;
+    }
+    
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+// Code Elements
+code {
+    background-color: $color-dark-bg;
+    color: $color-code-text;
+    padding: 2px 6px;
+    border-radius: $border-radius;
+    font-size: $font-size-small;
+    border: 1px solid #444;
+    text-shadow: none;
+    font-family: $font-family-mono;
+}
+
+pre {
+    background-color: $color-dark-bg;
+    color: $color-code-text;
+    padding: 1em;
+    border-radius: $border-radius-large;
+    overflow-x: auto;
+    margin: 1.5em 0;
+    border: 1px solid #444;
+    font-family: $font-family-mono;
+    
+    code {
+        background: transparent;
+        padding: 0;
+        border: none;
+        font-size: inherit;
+        font-family: inherit;
+    }
+}
+
+kbd {
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 1px 0 rgba(0,0,0,0.2), inset 0 0 0 2px #fff;
+    color: #333;
+    display: inline-block;
+    font-family: $font-family-mono;
+    font-size: $font-size-small;
+    line-height: 1.4;
+    margin: 0 0.1em;
+    padding: 0.1em 0.6em;
+    text-shadow: 0 1px 0 #fff;
+}
+
+// Form Elements
+form {
+    margin: auto;
+    text-align: center;
+}
+
+input, textarea {
+    border: none;
+    border-bottom: solid 1px $color-border;
+    background: transparent;
+    color: $color-white;
+    font-family: $font-family;
+    padding: $spacing-xs;
+    
+    &:focus {
+        outline: none;
+        border-bottom-color: $color-accent;
+    }
+}
+
+textarea {
+    width: 90vw;
+    height: 50vh;
+    resize: vertical;
+}
+
+// Images
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+// Scrollbar Styling
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: $color-dark-bg;
+}
+
+::-webkit-scrollbar-thumb {
+    background: $color-primary;
+    border-radius: $border-radius;
+    
+    &:hover {
+        background: $color-accent;
+    }
+}
+
+// Selection
+::selection {
+    background: $color-primary;
+    color: $color-white;
+}
+
+::-moz-selection {
+    background: $color-primary;
+    color: $color-white;
+}

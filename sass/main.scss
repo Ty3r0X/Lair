@@ -1,0 +1,219 @@
+/*!
+ * Ty3r0X's Lair - Main Stylesheet
+ * IMPORTANT! This stylesheet is minified
+ * for performance reasons. If you wish to
+ * get inspieration from it, please check
+ * out the git repo!
+ * 
+ * Follow The Eye!
+ */
+
+// =========================================
+// Import Order Matters!
+// =========================================
+
+// 1. Variables and Design Tokens (must be first)
+@import 'variables';
+
+// 2. Base Styles and Typography
+@import 'base';
+
+// 3. Layout Structure
+@import 'layout';
+
+// 4. Component Modules
+@import 'navigation';
+@import 'blog';
+@import 'tags';
+
+// 5. Utility Classes
+@import 'utilities';
+
+// 6. Responsive Design (should be last to override)
+@import 'responsive';
+
+// =========================================
+// Global Overrides and Fixes
+// =========================================
+
+// Ensure noscript message styling
+noscript {
+    p {
+        text-align: center;
+        padding: $spacing-md;
+        background-color: rgba($color-accent, 0.2);
+        border: 1px solid $color-accent;
+        border-radius: $border-radius;
+        margin: $spacing-md 0;
+        
+        a {
+            color: $color-accent;
+            font-weight: bold;
+            
+            &:hover {
+                color: $color-primary;
+            }
+        }
+    }
+}
+
+// Enhanced focus styles for accessibility
+*:focus {
+    outline: 2px solid $color-accent;
+    outline-offset: 2px;
+}
+
+// Skip link for screen readers
+.skip-link {
+    position: absolute;
+    top: -40px;
+    left: 6px;
+    background: $color-primary;
+    color: $color-white;
+    padding: 8px;
+    text-decoration: none;
+    border-radius: $border-radius;
+    z-index: $z-index-modal;
+    
+    &:focus {
+        top: 6px;
+    }
+}
+
+// Smooth scrolling for modern browsers
+html {
+    scroll-behavior: smooth;
+}
+
+// Text selection styling
+::selection {
+    background: rgba($color-primary, 0.7);
+    color: $color-white;
+    text-shadow: none;
+}
+
+::-moz-selection {
+    background: rgba($color-primary, 0.7);
+    color: $color-white;
+    text-shadow: none;
+}
+
+// =========================================
+// Animation Definitions
+// =========================================
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInFromRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+// Apply entrance animations
+.content {
+    animation: fadeIn 0.6s ease-out;
+}
+
+.post-preview {
+    animation: slideInFromLeft 0.5s ease-out;
+    
+    &:nth-child(even) {
+        animation: slideInFromRight 0.5s ease-out;
+    }
+}
+
+// Disable animations if user prefers reduced motion
+@media (prefers-reduced-motion: reduce) {
+    .content,
+    .post-preview {
+        animation: none;
+    }
+}
+
+// =========================================
+// Custom Scrollbar for WebKit Browsers
+// =========================================
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba($color-dark-bg, 0.5);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, $color-primary, $color-accent);
+    border-radius: 4px;
+    
+    &:hover {
+        background: linear-gradient(180deg, $color-accent, $color-primary);
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background: $color-dark-bg;
+}
+
+// =========================================
+// Future-proofing
+// =========================================
+
+// CSS Custom Properties for JavaScript interaction
+:root {
+    --current-theme: 'dark';
+    --header-height: #{$header-height};
+    --footer-height: #{$footer-height};
+    --primary-color: #{$color-primary};
+    --accent-color: #{$color-accent};
+}
+
+// Container queries support (future enhancement)
+@supports (container-type: inline-size) {
+    .content {
+        container-type: inline-size;
+    }
+    
+    @container (max-width: 600px) {
+        .post-preview h2 {
+            font-size: 1.3em;
+        }
+    }
+}

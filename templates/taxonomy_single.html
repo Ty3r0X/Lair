@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Posts tagged "{{ term.name }}" | {{ config.title }}{% endblock title %}
+
+{% block description %}All posts tagged with "{{ term.name }}" on {{ config.title }}{% endblock description %}
+
+{% block content %}
+    <h1>Posts tagged "{{ term.name }}"</h1>
+    
+    <div class="tag-description">
+        <p>{{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %} tagged with <span class="tag">{{ term.name }}</span></p>
+    </div>
+    
+    <div class="blog-posts">
+        {% for page in term.pages | sort(attribute="date") | reverse %}
+        <article class="post-preview">
+            <h2><a href="{{ page.permalink }}">{{ page.title }}</a></h2>
+            
+            <div class="post-meta">
+                <time datetime="{{ page.date }}">{{ page.date | date(format="%B %d, %Y") }}</time>
+                {% if page.extra.reading_time %}
+                <span class="reading-time">{{ page.extra.reading_time }} min read</span>
+                {% endif %}
+            </div>
+            
+            {% if page.summary %}
+            <div class="post-summary">
+                {{ page.summary | safe }}
+            </div>
+            {% elif page.description %}
+            <div class="post-summary">
+                <p>{{ page.description }}</p>
+            </div>
+            {% endif %}
+            
+            <div class="read-more">
+                <a href="{{ page.permalink }}">Read more →</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    
+    <div class="navigation-links">
+        <a href="/tags/">← All Tags</a>
+        |
+        <a href="/blog/">← Back to Blog</a>
+    </div>
+{% endblock content %}

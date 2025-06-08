@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title | default(value=config.title) }}{% endblock title %}
+
+{% block content %}
+    <img alt="ty3r0x-eye" class="pfp" src="{{ get_url(path='images/ty3r0x_eye_svg.svg') }}" />
+    <h1>{{ section.extra.heading | default(value="Follow The Eye!") }}</h1>
+    
+    <div class="content-1">
+        <a href="{{ get_url(path='misc/keys/Ty3r0X-PGP.asc') }}">GPG Key</a> |
+        <a href="{{ get_url(path='@/about.md') }}">About me</a> |
+	<a href="{{ get_url(path='@/contact.md') }}">Contact</a>
+    </div>
+    
+    {% if section.extra.friends_ring %}
+       <div class="webring-buttons">
+        {% for member in section.extra.friends_ring %}
+        <a href="{{ member.url }}" 
+           title="{{ member.alt | default(value=member.name) }}"
+           class="webring-button"
+           rel="noopener noreferrer">
+            <img src="{{ get_url(path=member.button) }}" 
+                 alt="{{ member.alt | default(value=member.name) }}"
+                 width="88" 
+                 height="31"
+                 loading="lazy" />
+        </a>
+        {% endfor %}
+    </div> 
+    {% endif %}
+    {% if section.extra.other_ring %}
+       <div class="project-buttons">
+        {% for object in section.extra.other_ring %}
+	{% if object.url %}
+        <a href="{{ object.url }}" 
+           title="{{ object.alt | default(value=object.name) }}"
+           class="project-button"
+           rel="noopener noreferrer">
+        {% endif %}
+            <img src="{{ get_url(path=object.button) }}" 
+                 alt="{{ object.alt | default(value=object.name) }}"
+                 width="88" 
+                 height="31"
+                 loading="lazy" />
+	{% if object.url %}
+        </a>
+        {% endif %}
+        {% endfor %}
+    </div> 
+    {% endif %}
+    
+    {% if section.content %}
+    <div class="main-content">
+        {{ section.content | safe }}
+    </div>
+    {% endif %}
+    
+    <noscript>
+	    <p>Rest here, legend, we don't do RCEs here!</p>
+    </noscript>
+{% endblock content %}

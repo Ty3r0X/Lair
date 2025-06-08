@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Tags | {{ config.title }}{% endblock title %}
+
+{% block description %}All tags used on {{ config.title }}{% endblock description %}
+
+{% block content %}
+    <h1>All Tags</h1>
+    
+    <div class="tags-overview">
+        <p>Browse all topics and categories covered on this site:</p>
+        
+        <div class="tag-cloud">
+            {% for term in terms %}
+            <div class="tag-item">
+                <a href="{{ term.permalink }}" class="tag-link">
+                    <span class="tag">{{ term.name }}</span>
+                    <span class="tag-count">({{ term.pages | length }})</span>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% if not terms %}
+        <div class="no-tags">
+            <p>No tags have been created yet. Check back soon!</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="back-to-blog">
+        <a href="/blog/">← Back to Blog</a>
+    </div>
+{% endblock content %}

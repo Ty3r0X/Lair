@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} | {{ config.title }}{% endblock title %}
+
+{% block description %}{{ page.description | default(value=config.description) }}{% endblock description %}
+
+{% block notification %}
+    {% if page.extra.notification %}
+    <div class="erin">
+        <p style="color: lightblue; text-align: center;">{{ page.extra.notification }}</p>
+    </div>
+    {% endif %}
+{% endblock notification %}
+
+{% block content %}
+    {% if page.title %}
+    <h1 id="{{ page.title | slugify }}">{{ page.title }}</h1>
+    {% endif %}
+    
+    {% if page.content %}
+    <div class="full-post">
+        {{ page.content | safe }}
+    </div>
+    {% endif %}
+{% endblock content %}
+
+{% block extra_head %}
+    {% if page.extra.ascii_art %}
+    <!-- 
+{{ page.extra.ascii_art | safe }}
+    -->
+    {% endif %}
+{% endblock extra_head %}
