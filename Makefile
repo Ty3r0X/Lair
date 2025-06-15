@@ -49,7 +49,6 @@ help:
 	@echo -e "$(GREEN)Main Commands:$(NC)"
 	@echo -e "  all          - Full build, convert to XHTML, and validate"
 	@echo -e "  build        - Build site with Zola"
-	@echo -e "  convert      - Convert HTML files to XHTML"
 	@echo -e "  validate     - Validate XHTML documents"
 	@echo -e "  test         - Run all tests and validations"
 	@echo -e "  deploy-ready - Build and validate for deployment"
@@ -113,45 +112,40 @@ build: check-deps
 	@$(ZOLA) build
 	@echo -e "$(GREEN)✓ Zola build complete$(NC)"
 
-## Convert HTML files to XHTML
+## Convert HTML files to XHTML and update references
 convert: 
-	@echo -e "$(BLUE)🔄 Converting HTML files to XHTML...$(NC)"
+	@echo -e "$(BLUE)🔄 Converting HTML to XHTML...$(NC)"
 	@if [ ! -d "$(BUILD_DIR)" ]; then \
-		echo -e "$(RED)✗ Build directory not found. Run 'make build' first$(NC)" && exit 1; \
+		echo -e "$(RED)✗ Build directory not found. Run 'make build' first.$(NC)"; \
+		exit 1; \
 	fi
-	@mkdir -p $(TEMP_DIR)
-	@converted=0; \
-	total=0; \
-	$(FIND) $(BUILD_DIR) -name "*.html" -type f | while read -r file; do \
-		total=$$((total + 1)); \
-		xhtml_file="$${file%.html}.xhtml"; \
-		echo -e "  📄 Converting $$(basename "$$file") → $$(basename "$$xhtml_file")"; \
-		if $(SED) \
-			-e '1i<?xml version="1.0" encoding="UTF-8"?>' \
-			-e 's|<!DOCTYPE html>|<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">|' \
-			-e 's|<html\([^>]*\)>|<html xmlns="http://www.w3.org/1999/xhtml"\1>|' \
-			-e 's|<html>|<html xmlns="http://www.w3.org/1999/xhtml">|' \
-			-e 's|<meta charset="utf-8">|<meta http-equiv="content-type" content="text/html; charset=UTF-8" />|' \
-			-e 's|<meta \([^>]*[^/]\)>|<meta \1 />|g' \
-			-e 's|<link \([^>]*[^/]\)>|<link \1 />|g' \
-			-e 's|<img \([^>]*[^/]\)>|<img \1 />|g' \
-			-e 's|<input \([^>]*[^/]\)>|<input \1 />|g' \
-			-e 's|<source \([^>]*[^/]\)>|<source \1 />|g' \
-			-e 's|<area \([^>]*[^/]\)>|<area \1 />|g' \
-			-e 's|<base \([^>]*[^/]\)>|<base \1 />|g' \
-			-e 's|<br[^>]*>|<br />|g' \
-			-e 's|<hr[^>]*>|<hr />|g' \
-			-e 's|<wbr[^>]*>|<wbr />|g' \
-			-e 's| />/>| />|g' \
-			"$$file" > "$$xhtml_file"; then \
-			rm "$$file"; \
-			converted=$$((converted + 1)); \
-		else \
-			echo -e "$(RED)✗ Error converting $$file$(NC)"; \
-			exit 1; \
-		fi; \
-	done
-	@echo -e "$(GREEN)✓ HTML to XHTML conversion complete$(NC)"
+	@html_count=$$($(FIND) $(BUILD_DIR) -name "*.html" | wc -l); \
+	if [ $$html_count -eq 0 ]; then \
+		echo -e "$(YELLOW)⚠️  No HTML files found to convert$(NC)"; \
+	else \
+		echo -e "  Converting $$html_count HTML files to XHTML..."; \
+		$(FIND) $(BUILD_DIR) -name "*.html" -type f | while read -r file; do \
+			xhtml_file="$${file%.html}.xhtml"; \
+			mv "$$file" "$$xhtml_file"; \
+			echo -e "    ✓ $$(basename "$$file") → $$(basename "$$xhtml_file")"; \
+		done; \
+		\
+		echo -e "  Updating internal references..."; \
+		$(FIND) $(BUILD_DIR) -name "*.xhtml" -type f | while read -r file; do \
+			$(SED) -i 's/\.html\"/\.xhtml\"/g; s/\.html#/\.xhtml#/g; s/\.html$$/\.xhtml/g' "$$file" 2>/dev/null || true; \
+		done; \
+		\
+		$(FIND) $(BUILD_DIR) -name "*.css" -type f | while read -r file; do \
+			$(SED) -i 's/\.html\"/\.xhtml\"/g' "$$file" 2>/dev/null || true; \
+		done; \
+		\
+		$(FIND) $(BUILD_DIR) -name "*.js" -type f | while read -r file; do \
+			$(SED) -i 's/\.html\"/\.xhtml\"/g; s/\.html'"'"'/\.xhtml'"'"'/g' "$$file" 2>/dev/null || true; \
+		done; \
+		\
+		echo -e "$(GREEN)✓ Converted $$html_count HTML files to XHTML$(NC)"; \
+	fi
+
 
 # =============================================================================
 # Validation Targets
@@ -343,28 +337,6 @@ clean-all: clean
 	@rm -rf $(REPORTS_DIR)
 	@rm -f $(TEMPLATES_DIR)/year.html
 	@echo -e "$(GREEN)✓ All generated files cleaned$(NC)"
-
-# =============================================================================
-# CI/CD Integration Targets
-# =============================================================================
-
-## CI/CD pipeline target
-ci: check-deps
-	@echo -e "$(BLUE)🤖 Running CI/CD pipeline...$(NC)"
-	@$(MAKE) clean
-	@$(MAKE) all
-	@$(MAKE) test
-	@$(MAKE) generate-report
-	@echo -e "$(GREEN)✓ CI/CD pipeline completed successfully$(NC)"
-
-## Quick validation (for git hooks)
-quick-check:
-	@echo -e "$(BLUE)⚡ Running quick validation...$(NC)"
-	@if [ -d "$(BUILD_DIR)" ]; then \
-		$(MAKE) validate-structure; \
-	else \
-		echo -e "$(YELLOW)⚠️  No build directory found, skipping validation$(NC)"; \
-	fi
 
 # =============================================================================
 # Archive and Deployment Helpers

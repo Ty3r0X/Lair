@@ -1,6 +1,6 @@
 # Zola configuration file
 
-base_url = "https://ty3r0x.chaox.ro"
+base_url = "/"
 title = "Ty3r0X's Lair"
 description = "Follow The Eye! - Personal website of Ty3r0X"
 
@@ -16,7 +16,7 @@ output_dir = "public"
 # When set to "true", the Sass files in the `sass` directory in the site root are compiled.
 compile_sass = true
 
-# When set to "true", the generated HTML files are minified.
+# XHTML hates minified HTML
 minify_html = false
 
 # A list of glob patterns specifying asset files to ignore when the content
@@ -38,7 +38,7 @@ feed_filenames = ["atom.xml"]
 # static files. Note that for this to work, both `static` and the
 # output directory need to be on the same filesystem. Note that the theme's `static`
 # files are always copied.
-hard_link_static = false
+hard_link_static = true
 
 # The taxonomies to be rendered for the site and their configuration of the default languages
 taxonomies = [
