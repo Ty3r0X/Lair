@@ -1,0 +1,117 @@
+name: Deploy Ty3r0X's Lair
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:  # Allow manual triggers
+
+jobs:
+  build-and-deploy:
+    runs-on: codeberg-tiny-lazy
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # Full history for git describe in Makefile
+    
+    - name: Install system dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          libxml2-utils \
+          rsync \
+          openssh-client \
+          make \
+          perl \
+          sed
+    
+    - name: Install Zola
+      run: |
+        ZOLA_VERSION="0.18.0"
+        curl -sL https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar xz
+        sudo mv zola /usr/local/bin/
+        zola --version
+    
+    - name: Check dependencies
+      run: make check-deps
+    
+    - name: Build site
+      run: |
+        make deploy-ready || {
+          echo "⚠️ XHTML validation failed, but build completed. Continuing with deployment..."
+          make build convert
+        }
+    
+    - name: Verify deployment readiness
+      run: make verify-deployment
+    
+    - name: Setup SSH key
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSHKEY_GETIMISKON }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ vars.HOST_GETIMISKON }} >> ~/.ssh/known_hosts
+    
+    - name: Deploy to remote server
+      env:
+        SERVER_HOST: ${{ vars.HOST_GETIMISKON }}
+        SERVER_USER: ty3r0x
+      run: |
+        echo "🚀 Deploying to ${SERVER_HOST}..."
+        
+        # Create www directory if it doesn't exist
+        ssh -o StrictHostKeyChecking=no "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ~/www"
+        
+        # Deploy files with rsync
+        rsync -avz --delete \
+          --exclude='.git*' \
+          --exclude='reports/' \
+          --exclude='.tmp/' \
+          ./public/ "${SERVER_USER}@${SERVER_HOST}:~/www/"
+        
+        echo "✅ Deployment completed successfully!"
+    
+    - name: Post-deployment verification
+      env:
+        SERVER_HOST: ${{ secrets.SERVER_HOST }}
+        SERVER_USER: ${{ secrets.SERVER_USER }}
+      run: |
+        echo "🔍 Verifying deployment..."
+        
+        # Check if index file exists on remote
+        if ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f ~/www/index.xhtml ]"; then
+          echo "✅ index.xhtml found on remote server"
+        else
+          echo "❌ index.xhtml not found on remote server"
+          exit 1
+        fi
+        
+        # Check if CSS exists
+        if ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f ~/www/main.css ]"; then
+          echo "✅ main.css found on remote server"
+        else
+          echo "⚠️ main.css not found on remote server"
+        fi
+        
+        # Show deployed file count
+        file_count=$(ssh "${SERVER_USER}@${SERVER_HOST}" "find ~/www -type f | wc -l")
+        echo "📊 Deployed $file_count files to ~/www"
+    
+    - name: Generate deployment report
+      if: always()
+      env:
+        SERVER_HOST: ${{ vars.HOST_GETIMISKON }}
+      run: |
+        echo "📋 Deployment Summary"
+        echo "===================="
+        echo "Repository: ${{ github.repository }}"
+        echo "Branch: ${{ github.ref_name }}"
+        echo "Commit: ${{ github.sha }}"
+        echo "Build Date: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+        echo "Target: ${SERVER_HOST}:~/www"
+        
+        if [ -d "./public" ]; then
+          echo "Local files built: $(find ./public -type f | wc -l)"
+          echo "Local build size: $(du -sh ./public | cut -f1)"
+        fi
