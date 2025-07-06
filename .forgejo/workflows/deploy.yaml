@@ -1,13 +1,37 @@
 name: Deploy Ty3r0X's Lair
-
 on:
   push:
     branches: [main, master]
   workflow_dispatch:  # Allow manual triggers
+    inputs:
+      deploy_targets:
+        description: 'Deployment targets (comma-separated: chaox, catto, or all)'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+        - all
+        - chaox
+        - catto
+        - chaox,catto
+
+env:
+  ZOLA_VERSION: "0.18.0"
 
 jobs:
-  build-and-deploy:
+  build:
+    name: Build Site for Multiple Endpoints
     runs-on: codeberg-tiny-lazy
+    strategy:
+      fail-fast: false
+      matrix:
+        endpoint:
+          - name: chaox
+            base_url: "https://ty3r0x.chaox.ro"
+            description: "Main site at chaox.ro"
+          - name: catto
+            base_url: "https://catto.garden/~ty3r0x"
+            description: "Mirror at catto.garden"
     
     steps:
     - name: Checkout repository
@@ -20,15 +44,13 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y \
           libxml2-utils \
-          rsync \
-          openssh-client \
           make \
           perl \
-          sed
+          sed \
+          jq
     
     - name: Install Zola
       run: |
-        ZOLA_VERSION="0.18.0"
         curl -sL https://github.com/getzola/zola/releases/download/v${ZOLA_VERSION}/zola-v${ZOLA_VERSION}-x86_64-unknown-linux-gnu.tar.gz | tar xz
         sudo mv zola /usr/local/bin/
         zola --version
@@ -36,82 +58,295 @@ jobs:
     - name: Check dependencies
       run: make check-deps
     
-    - name: Build site
+    - name: Configure for endpoint
       run: |
+        echo "🔧 Configuring build for ${{ matrix.endpoint.name }}"
+        echo "📍 Base URL: ${{ matrix.endpoint.base_url }}"
+        echo "📝 Description: ${{ matrix.endpoint.description }}"
+        
+        # Backup original config
+        cp config.toml config.toml.backup
+        
+        # Update base_url in config.toml
+        sed -i 's|^base_url = .*|base_url = "${{ matrix.endpoint.base_url }}"|' config.toml
+        
+        # Verify the change
+        echo "✅ Updated config.toml:"
+        grep "base_url" config.toml
+    
+    - name: Build site for ${{ matrix.endpoint.name }}
+      run: |
+        echo "🏗️ Building site for ${{ matrix.endpoint.name }}..."
         make deploy-ready || {
           echo "⚠️ XHTML validation failed, but build completed. Continuing with deployment..."
           make build convert
         }
     
-    - name: Verify deployment readiness
-      run: make verify-deployment
+    - name: Verify build for ${{ matrix.endpoint.name }}
+      run: |
+        make verify-deployment
+        
+        # Additional verification for this endpoint
+        if [ -d "./public" ]; then
+          echo "✅ Build successful for ${{ matrix.endpoint.name }}"
+          echo "📊 Files built: $(find ./public -type f | wc -l)"
+          echo "📦 Size: $(du -sh ./public | cut -f1)"
+        else
+          echo "❌ Build failed - public directory not found"
+          exit 1
+        fi
     
-    - name: Setup SSH key
+    - name: Generate build report for ${{ matrix.endpoint.name }}
+      run: |
+        echo "📋 Build Summary for ${{ matrix.endpoint.name }}" > build-report-${{ matrix.endpoint.name }}.txt
+        echo "===============================================" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Endpoint: ${{ matrix.endpoint.name }}" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Base URL: ${{ matrix.endpoint.base_url }}" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Description: ${{ matrix.endpoint.description }}" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Repository: ${{ github.repository }}" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Branch: ${{ github.ref_name }}" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Commit: ${{ github.sha }}" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "Build Date: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> build-report-${{ matrix.endpoint.name }}.txt
+        echo "" >> build-report-${{ matrix.endpoint.name }}.txt
+        
+        if [ -d "./public" ]; then
+          echo "Built files: $(find ./public -type f | wc -l)" >> build-report-${{ matrix.endpoint.name }}.txt
+          echo "Build size: $(du -sh ./public | cut -f1)" >> build-report-${{ matrix.endpoint.name }}.txt
+          echo "" >> build-report-${{ matrix.endpoint.name }}.txt
+          echo "Key files:" >> build-report-${{ matrix.endpoint.name }}.txt
+          find ./public -name "*.html" -o -name "*.xhtml" -o -name "*.css" -o -name "*.js" | head -10 >> build-report-${{ matrix.endpoint.name }}.txt
+        fi
+        
+        echo "📋 Build report for ${{ matrix.endpoint.name }}:"
+        cat build-report-${{ matrix.endpoint.name }}.txt
+    
+    - name: Upload build artifacts for ${{ matrix.endpoint.name }}
+      uses: actions/upload-artifact@v3
+      with:
+        name: website-build-${{ matrix.endpoint.name }}
+        path: |
+          public/
+          build-report-${{ matrix.endpoint.name }}.txt
+          config.toml.backup
+        retention-days: 30
+        if-no-files-found: error
+    
+    - name: Restore original config
+      if: always()
+      run: |
+        if [ -f config.toml.backup ]; then
+          mv config.toml.backup config.toml
+        fi
+
+  deploy-chaox:
+    name: Deploy to chaox.ro
+    runs-on: codeberg-tiny-lazy
+    needs: build
+    if: github.event_name == 'push' || contains(github.event.inputs.deploy_targets || 'all', 'chaox') || github.event.inputs.deploy_targets == 'all'
+    environment: production-chaox
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: website-build-chaox
+        path: ./
+    
+    - name: Install deployment dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y rsync openssh-client
+    
+    - name: Verify artifacts for chaox
+      run: |
+        echo "🔍 Verifying artifacts for chaox deployment..."
+        
+        if [ ! -d "./public" ]; then
+          echo "❌ public/ directory not found in artifacts"
+          exit 1
+        fi
+        
+        if [ -f "./build-report-chaox.txt" ]; then
+          echo "📋 Build Report for chaox:"
+          cat ./build-report-chaox.txt
+        fi
+        
+        echo "📁 Artifact verification:"
+        echo "Total files: $(find ./public -type f | wc -l)"
+        echo "Total size: $(du -sh ./public | cut -f1)"
+    
+    - name: Setup SSH key for chaox
+      run: |
+        mkdir -p ~/.ssh
+        echo "${{ secrets.SSHKEY_CHAOX }}" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan -H ${{ vars.HOST_CHAOX }} >> ~/.ssh/known_hosts
+    
+    - name: Deploy to chaox.ro
+      env:
+        SERVER_HOST: ${{ vars.HOST_CHAOX }}
+        SERVER_USER: ${{ vars.USER_CHAOX }}
+        SERVER_PATH: ${{ vars.PATH_CHAOX }}
+      run: |
+        echo "🚀 Deploying to chaox.ro (${SERVER_HOST})..."
+        
+        # Create target directory if it doesn't exist
+        ssh -o StrictHostKeyChecking=no "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ${SERVER_PATH}"
+        
+        # Deploy files with rsync
+        rsync -avz --delete \
+          --exclude='build-report-*.txt' \
+          --exclude='config.toml.backup' \
+          ./public/ "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/"
+        
+        echo "✅ Deployment to chaox.ro completed!"
+    
+    - name: Verify chaox deployment
+      env:
+        SERVER_HOST: ${{ vars.HOST_CHAOX }}
+        SERVER_USER: ${{ vars.USER_CHAOX }}
+        SERVER_PATH: ${{ vars.PATH_CHAOX }}
+      run: |
+        echo "🔍 Verifying chaox.ro deployment..."
+        
+        # Check if index file exists
+        if ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f ${SERVER_PATH}/index.xhtml ]"; then
+          echo "✅ index.xhtml found on chaox.ro"
+        else
+          echo "❌ index.xhtml not found on chaox.ro"
+          exit 1
+        fi
+        
+        # Count deployed files
+        file_count=$(ssh "${SERVER_USER}@${SERVER_HOST}" "find ${SERVER_PATH} -type f | wc -l")
+        echo "📊 Deployed $file_count files to chaox.ro"
+
+  deploy-catto:
+    name: Deploy to catto.garden
+    runs-on: codeberg-tiny-lazy
+    needs: build
+    if: github.event_name == 'push' || contains(github.event.inputs.deploy_targets || 'all', 'catto') || github.event.inputs.deploy_targets == 'all'
+    environment: production-catto
+    
+    steps:
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: website-build-catto
+        path: ./
+    
+    - name: Install deployment dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y rsync openssh-client
+    
+    - name: Verify artifacts for catto
+      run: |
+        echo "🔍 Verifying artifacts for catto.garden deployment..."
+        
+        if [ ! -d "./public" ]; then
+          echo "❌ public/ directory not found in artifacts"
+          exit 1
+        fi
+        
+        if [ -f "./build-report-catto.txt" ]; then
+          echo "📋 Build Report for catto:"
+          cat ./build-report-catto.txt
+        fi
+        
+        echo "📁 Artifact verification:"
+        echo "Total files: $(find ./public -type f | wc -l)"
+        echo "Total size: $(du -sh ./public | cut -f1)"
+    
+    - name: Setup SSH key for catto
       run: |
         mkdir -p ~/.ssh
         echo "${{ secrets.SSHKEY_GETIMISKON }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ vars.HOST_GETIMISKON }} >> ~/.ssh/known_hosts
     
-    - name: Deploy to remote server
+    - name: Deploy to catto.garden
       env:
         SERVER_HOST: ${{ vars.HOST_GETIMISKON }}
-        SERVER_USER: ty3r0x
+        SERVER_USER: ${{ vars.USER_GETIMISKON }}
+        SERVER_PATH: ${{ vars.PATH_GETIMISKON }}
       run: |
-        echo "🚀 Deploying to ${SERVER_HOST}..."
+        echo "🚀 Deploying to catto.garden (${SERVER_HOST})..."
         
-        # Create www directory if it doesn't exist
-        ssh -o StrictHostKeyChecking=no "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ~/www"
+        # Create target directory if it doesn't exist
+        ssh -o StrictHostKeyChecking=no "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ${SERVER_PATH}"
         
         # Deploy files with rsync
         rsync -avz --delete \
-          --exclude='.git*' \
-          --exclude='reports/' \
-          --exclude='.tmp/' \
-          ./public/ "${SERVER_USER}@${SERVER_HOST}:~/www/"
+          --exclude='build-report-*.txt' \
+          --exclude='config.toml.backup' \
+          ./public/ "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/"
         
-        echo "✅ Deployment completed successfully!"
+        echo "✅ Deployment to catto.garden completed!"
     
-    - name: Post-deployment verification
+    - name: Verify catto deployment
       env:
-        SERVER_HOST: ${{ secrets.SERVER_HOST }}
-        SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_HOST: ${{ vars.HOST_GETIMISKON }}
+        SERVER_USER: ${{ vars.USER_GETIMISKON }}
+        SERVER_PATH: ${{ vars.PATH_GETIMISKON }}
       run: |
-        echo "🔍 Verifying deployment..."
+        echo "🔍 Verifying catto.garden deployment..."
         
-        # Check if index file exists on remote
-        if ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f ~/www/index.xhtml ]"; then
-          echo "✅ index.xhtml found on remote server"
+        # Check if index file exists
+        if ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f ${SERVER_PATH}/index.xhtml ]"; then
+          echo "✅ index.xhtml found on catto.garden"
         else
-          echo "❌ index.xhtml not found on remote server"
+          echo "❌ index.xhtml not found on catto.garden"
           exit 1
         fi
         
-        # Check if CSS exists
-        if ssh "${SERVER_USER}@${SERVER_HOST}" "[ -f ~/www/main.css ]"; then
-          echo "✅ main.css found on remote server"
-        else
-          echo "⚠️ main.css not found on remote server"
-        fi
-        
-        # Show deployed file count
-        file_count=$(ssh "${SERVER_USER}@${SERVER_HOST}" "find ~/www -type f | wc -l")
-        echo "📊 Deployed $file_count files to ~/www"
+        # Count deployed files
+        file_count=$(ssh "${SERVER_USER}@${SERVER_HOST}" "find ${SERVER_PATH} -type f | wc -l")
+        echo "📊 Deployed $file_count files to catto.garden"
+
+  deployment-summary:
+    name: Deployment Summary
+    runs-on: codeberg-tiny-lazy
+    needs: [deploy-chaox, deploy-catto]
+    if: always()
     
-    - name: Generate deployment report
-      if: always()
-      env:
-        SERVER_HOST: ${{ vars.HOST_GETIMISKON }}
+    steps:
+    - name: Generate deployment summary
       run: |
-        echo "📋 Deployment Summary"
+        echo "🎯 Deployment Summary"
         echo "===================="
         echo "Repository: ${{ github.repository }}"
         echo "Branch: ${{ github.ref_name }}"
         echo "Commit: ${{ github.sha }}"
-        echo "Build Date: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
-        echo "Target: ${SERVER_HOST}:~/www"
+        echo "Workflow: ${{ github.run_id }}"
+        echo "Triggered by: ${{ github.event_name }}"
         
-        if [ -d "./public" ]; then
-          echo "Local files built: $(find ./public -type f | wc -l)"
-          echo "Local build size: $(du -sh ./public | cut -f1)"
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "Deploy targets: ${{ github.event.inputs.deploy_targets }}"
         fi
+        
+        echo ""
+        echo "📊 Deployment Results:"
+        
+        # Check chaox deployment
+        if [ "${{ needs.deploy-chaox.result }}" = "success" ]; then
+          echo "✅ chaox.ro: SUCCESS"
+        elif [ "${{ needs.deploy-chaox.result }}" = "skipped" ]; then
+          echo "⏭️ chaox.ro: SKIPPED"
+        else
+          echo "❌ chaox.ro: FAILED"
+        fi
+        
+        # Check catto deployment
+        if [ "${{ needs.deploy-catto.result }}" = "success" ]; then
+          echo "✅ catto.garden: SUCCESS"
+        elif [ "${{ needs.deploy-catto.result }}" = "skipped" ]; then
+          echo "⏭️ catto.garden: SKIPPED"
+        else
+          echo "❌ catto.garden: FAILED"
+        fi
+        
+        echo ""
+        echo "🌐 Live Sites:"
+        echo "- https://ty3r0x.chaox.ro"
+        echo "- https://catto.garden/~ty3r0x"
