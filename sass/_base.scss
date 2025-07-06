@@ -5,7 +5,7 @@
 // Font Loading
 @font-face {
     font-family: storopia;
-    src: url(../fonts/font.woff) format('woff');
+    src: url(fonts/font.woff) format('woff');
     font-display: swap;
 }
 
@@ -30,7 +30,7 @@ body {
 
 body.page-home,
 body.page-about {
-    background: url("../images/bg.gif");  // Animated background for home & about
+    background: url("images/bg.gif");  // Animated background for home & about
 }
 
 // Typography
