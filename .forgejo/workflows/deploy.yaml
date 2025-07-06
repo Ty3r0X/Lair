@@ -20,7 +20,7 @@ env:
 
 jobs:
   build:
-    name: Build Site for Multiple Endpoints
+    name: Build-Site
     runs-on: codeberg-tiny-lazy
     strategy:
       fail-fast: false
@@ -58,7 +58,7 @@ jobs:
     - name: Check dependencies
       run: make check-deps
     
-    - name: Configure for endpoint
+    - name: Configure build for ${{ matrix.endpoint.name }} endpoint
       run: |
         echo "🔧 Configuring build for ${{ matrix.endpoint.name }}"
         echo "📍 Base URL: ${{ matrix.endpoint.base_url }}"
@@ -74,7 +74,7 @@ jobs:
         echo "✅ Updated config.toml:"
         grep "base_url" config.toml
     
-    - name: Build site for ${{ matrix.endpoint.name }}
+    - name: Build ${{ matrix.endpoint.name }} site
       run: |
         echo "🏗️ Building site for ${{ matrix.endpoint.name }}..."
         make deploy-ready || {
@@ -82,7 +82,7 @@ jobs:
           make build convert
         }
     
-    - name: Verify build for ${{ matrix.endpoint.name }}
+    - name: Verify ${{ matrix.endpoint.name }} build
       run: |
         make verify-deployment
         
@@ -120,7 +120,7 @@ jobs:
         echo "📋 Build report for ${{ matrix.endpoint.name }}:"
         cat build-report-${{ matrix.endpoint.name }}.txt
     
-    - name: Upload build artifacts for ${{ matrix.endpoint.name }}
+    - name: Upload ${{ matrix.endpoint.name }} build artifacts
       uses: actions/upload-artifact@v3
       with:
         name: website-build-${{ matrix.endpoint.name }}
@@ -139,7 +139,7 @@ jobs:
         fi
 
   deploy-chaox:
-    name: Deploy to chaox.ro
+    name: Deploy-to-chaox
     runs-on: codeberg-tiny-lazy
     needs: build
     if: github.event_name == 'push' || contains(github.event.inputs.deploy_targets || 'all', 'chaox') || github.event.inputs.deploy_targets == 'all'
@@ -180,21 +180,33 @@ jobs:
         mkdir -p ~/.ssh
         echo "${{ secrets.SSHKEY_CHAOX }}" > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan -H ${{ vars.HOST_CHAOX }} >> ~/.ssh/known_hosts
+        
+        # Add host key for custom port
+        ssh-keyscan -p ${{ vars.PORT_CHAOX }} -H ${{ vars.HOST_CHAOX }} >> ~/.ssh/known_hosts
+        
+        # Configure SSH to use custom port for this host
+        cat >> ~/.ssh/config << EOF
+        Host ${{ vars.HOST_CHAOX }}
+            Port ${{ vars.PORT_CHAOX }}
+            StrictHostKeyChecking no
+        EOF
+        chmod 600 ~/.ssh/config
     
     - name: Deploy to chaox.ro
       env:
         SERVER_HOST: ${{ vars.HOST_CHAOX }}
         SERVER_USER: ${{ vars.USER_CHAOX }}
         SERVER_PATH: ${{ vars.PATH_CHAOX }}
+        SERVER_PORT: ${{ vars.PORT_CHAOX }}
       run: |
-        echo "🚀 Deploying to chaox.ro (${SERVER_HOST})..."
+        echo "🚀 Deploying to chaox.ro (${SERVER_HOST}:${SERVER_PORT})..."
         
         # Create target directory if it doesn't exist
-        ssh -o StrictHostKeyChecking=no "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ${SERVER_PATH}"
+        ssh "${SERVER_USER}@${SERVER_HOST}" "mkdir -p ${SERVER_PATH}"
         
-        # Deploy files with rsync
+        # Deploy files with rsync using custom port
         rsync -avz --delete \
+          -e "ssh -p ${SERVER_PORT}" \
           --exclude='build-report-*.txt' \
           --exclude='config.toml.backup' \
           ./public/ "${SERVER_USER}@${SERVER_HOST}:${SERVER_PATH}/"
@@ -222,7 +234,7 @@ jobs:
         echo "📊 Deployed $file_count files to chaox.ro"
 
   deploy-catto:
-    name: Deploy to catto.garden
+    name: Deploy-to-catto
     runs-on: codeberg-tiny-lazy
     needs: build
     if: github.event_name == 'push' || contains(github.event.inputs.deploy_targets || 'all', 'catto') || github.event.inputs.deploy_targets == 'all'
@@ -305,7 +317,7 @@ jobs:
         echo "📊 Deployed $file_count files to catto.garden"
 
   deployment-summary:
-    name: Deployment Summary
+    name: Deployment-Summary
     runs-on: codeberg-tiny-lazy
     needs: [deploy-chaox, deploy-catto]
     if: always()
