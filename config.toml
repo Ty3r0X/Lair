@@ -55,8 +55,8 @@ highlight_code = true
 # Custom variables can be defined here for use in templates
 nav_links = [
   { name = "Chaox", url = "https://chaox.ro/" },
-  { name = "My Blog", url = "./blog/" },
-  { name = "Webrings", url = "./webrings/" },
+  { name = "My Blog", url = "/blog/" },
+  { name = "Webrings", url = "/webrings/" },
 ]
 
 # Footer links

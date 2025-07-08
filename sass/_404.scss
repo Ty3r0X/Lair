@@ -1,0 +1,190 @@
+// =========================================
+// 404 Error Page Styles
+// =========================================
+
+.error-404 {
+    text-align: center;
+    max-width: 600px;
+    margin: auto;
+    padding: $spacing-lg;
+    position: relative;
+    z-index: 1;
+}
+
+.error-code {
+    font-size: 8em;
+    font-weight: bold;
+    color: $color-primary;
+    text-shadow: 0 0 20px $color-primary, 2px 2px 4px $color-black;
+    margin: 0;
+    line-height: 1;
+    animation: glitch 2s infinite;
+    cursor: pointer;
+    user-select: none;
+    
+    @media (max-width: $breakpoint-mobile) {
+        font-size: 4em;
+    }
+}
+
+.error-message {
+    font-size: 1.5em;
+    color: $color-text-light;
+    margin: 1em 0;
+    text-shadow: $text-shadow;
+    
+    @media (max-width: $breakpoint-mobile) {
+        font-size: 1.2em;
+    }
+}
+
+.error-description {
+    color: $color-white;
+    margin: $spacing-lg 0;
+    line-height: $line-height-base;
+    text-shadow: $text-shadow;
+    
+    p {
+        margin-bottom: 1em;
+        
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.error-actions {
+    margin: $spacing-xl 0;
+    
+    a {
+        display: inline-block;
+        margin: $spacing-sm $spacing-md;
+        padding: $spacing-sm $spacing-md;
+        background-color: $color-primary;
+        color: $color-white;
+        text-decoration: none;
+        border-radius: $border-radius-large;
+        transition: all $transition-fast;
+        font-weight: bold;
+        text-shadow: none;
+        border: 2px solid $color-primary;
+        
+        &:hover {
+            background-color: $color-accent;
+            border-color: $color-accent;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba($color-primary, 0.3);
+        }
+        
+        @media (max-width: $breakpoint-mobile) {
+            display: block;
+            margin: $spacing-sm 0;
+            width: 100%;
+            max-width: 250px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+.error-eye {
+    margin: $spacing-lg 0;
+    opacity: 0.7;
+    animation: pulse 3s ease-in-out infinite;
+    
+    img {
+        max-width: 150px;
+        filter: drop-shadow(0 0 10px $color-primary);
+        
+        @media (max-width: $breakpoint-mobile) {
+            max-width: 100px;
+        }
+    }
+}
+
+.terminal-text {
+    font-family: $font-family-mono;
+    background-color: $color-dark-bg;
+    color: $color-accent;
+    padding: $spacing-md;
+    border-radius: $border-radius-large;
+    border: 1px solid $color-border;
+    margin: $spacing-lg 0;
+    text-align: left;
+    font-size: $font-size-small;
+    box-shadow: inset 0 0 10px rgba($color-black, 0.5);
+    text-shadow: none;
+    
+    @media (max-width: $breakpoint-mobile) {
+        font-size: $font-size-small;
+        padding: $spacing-sm;
+    }
+}
+
+.terminal-prompt {
+    color: $color-primary;
+    font-weight: bold;
+}
+
+.terminal-error {
+    color: $color-error;
+}
+
+.terminal-info {
+    color: $color-white;
+}
+
+// =========================================
+// 404 Page Animations
+// =========================================
+
+@keyframes glitch {
+    0% { 
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+    20% { 
+        transform: translate(-2px, 2px);
+        filter: hue-rotate(90deg);
+    }
+    40% { 
+        transform: translate(-2px, -2px);
+        filter: hue-rotate(180deg);
+    }
+    60% { 
+        transform: translate(2px, 2px);
+        filter: hue-rotate(270deg);
+    }
+    80% { 
+        transform: translate(2px, -2px);
+        filter: hue-rotate(360deg);
+    }
+    100% { 
+        transform: translate(0);
+        filter: hue-rotate(0deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+// =========================================
+// 404 Page Accessibility & Motion
+// =========================================
+
+// Disable animations if user prefers reduced motion
+@media (prefers-reduced-motion: reduce) {
+    .error-code,
+    .error-eye,
+    .error-actions a:hover {
+        transform: none;
+    }
+}
