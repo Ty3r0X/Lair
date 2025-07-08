@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}404 - Page Not Found | {{ config.title }}{% endblock title %}
+
+{% block description %}The page you're looking for has vanished into the digital void. Follow The Eye back to safety.{% endblock description %}
+
+{% block content %}
+<!-- Matrix background effect -->
+<div class="matrix-bg" id="matrix"></div>
+
+<div class="error-404">
+    <div class="error-eye">
+        <img src="{{ get_url(path='images/ty3r0x_eye_svg.svg') }}" alt="Ty3r0X Eye" />
+    </div>
+    
+    <h1 class="error-code">404</h1>
+    
+    <h2 class="error-message">CONNECTION LOST</h2>
+    
+    <div class="terminal-text">
+<span class="terminal-prompt">ty3r0x@lair:~$</span> locate page<br>
+<span class="terminal-error">ERROR:</span> File not found in database<br>
+<span class="terminal-prompt">ty3r0x@lair:~$</span> trace route<br>
+<span class="terminal-error">TRACE FAILED:</span> Path leads to digital void<br>
+<span class="terminal-prompt">ty3r0x@lair:~$</span> suggest_action<br>
+<span class="terminal-info">RECOMMENDATION:</span> Follow The Eye back to safety
+    </div>
+    
+    <div class="error-description">
+        <p>The page you're looking for has vanished into the digital void. It may have been moved, deleted, or never existed in this reality.</p>
+    </div>
+    
+    <div class="error-actions">
+        <a href="{{ get_url(path='@/_index.md') }}">Return to Lair</a>
+        <a href="{{ get_url(path='@/blog/_index.md') }}">Browse Blog</a>
+        <a href="{{ get_url(path='@/contact.md') }}">Contact Ty3r0X</a>
+    </div>
+    
+    <noscript>
+        <div class="card">
+            <p>JavaScript is disabled, but that's okay - real hackers appreciate minimalism!</p>
+        </div>
+    </noscript>
+</div>
+{% endblock content %}
+
+{% block extra_body %}
+{% endblock extra_body %}
