@@ -41,9 +41,7 @@ feed_filenames = ["atom.xml"]
 hard_link_static = true
 
 # The taxonomies to be rendered for the site and their configuration of the default languages
-taxonomies = [
-    {name = "tags", feed = true},
-]
+taxonomies = [{ name = "tags", feed = true }]
 
 # Whether to build a search index to be used later on by a JavaScript library
 build_search_index = false
@@ -56,12 +54,12 @@ highlight_code = true
 [extra]
 # Custom variables can be defined here for use in templates
 nav_links = [
-    { name = "Chaox", url = "https://chaox.ro/" },
-    { name = "My Blog", url = "/blog/" },
-    { name = "Webrings", url = "/webrings/" },
+  { name = "Chaox", url = "https://chaox.ro/" },
+  { name = "My Blog", url = "./blog/" },
+  { name = "Webrings", url = "./webrings/" },
 ]
 
 # Footer links
 footer_links = [
-    { name = "Neocities Mirror", url = "https://ty3r0x.neocities.org/" },
+  { name = "Neocities Mirror", url = "https://ty3r0x.neocities.org/" },
 ]
