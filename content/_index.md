@@ -86,6 +86,12 @@ name = "fediverse-propaganda"
 url = "http://fediverse.party"
 button = "images/web_buttons/misc/fedi.gif"
 
+
+[[extra.other_ring]]
+name = "lair-button"
+url = "images/web_buttons/misc/ty3r0x-banner.gif"
+button = "images/web_buttons/misc/ty3r0x-banner.gif"
+
 [[extra.other_ring]]
 name = "xhtml-compliance"
 url = "http://validator.w3.org/check?uri=https://ty3r0x.chaox.ro"
