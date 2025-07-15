@@ -52,6 +52,11 @@ url = "http://deavmi.assigned.network/projects/crxn/"
 button = "images/web_buttons/misc/crxn.png"
 
 [[extra.other_ring]]
+name = "neovim"
+url = "https://neovim.io/"
+button = "images/web_buttons/misc/neovim.gif"
+
+[[extra.other_ring]]
 name = "idk"
 button = "images/web_buttons/misc/magic.gif"
 
@@ -64,12 +69,25 @@ name = "chrome-is-shit"
 button = "images/web_buttons/misc/chrome.gif"
 
 [[extra.other_ring]]
+name = "firefox-propaganda"
+button = "images/web_buttons/misc/firefox.gif"
+
+[[extra.other_ring]]
 name = "darkmode-ready"
 button = "images/web_buttons/misc/dark-mode.gif"
 
 [[extra.other_ring]]
+name = "homebrew-manifesto"
+url = "https://hacks.guide"
+button = "images/web_buttons/misc/homebrew.png"
+
+[[extra.other_ring]]
 name = "kawaii-desuu"
 button = "images/web_buttons/misc/fun-jp.gif"
+
+[[extra.other_ring]]
+name = "xp-nostalgia"
+button = "images/web_buttons/misc/imissxp.gif"
 
 [[extra.other_ring]]
 name = "linux-propaganda"
@@ -86,6 +104,15 @@ name = "fediverse-propaganda"
 url = "http://fediverse.party"
 button = "images/web_buttons/misc/fedi.gif"
 
+[[extra.other_ring]]
+name = "monero-propaganda"
+url = "https://getmonero.org"
+button = "images/web_buttons/misc/monero-now.gif"
+
+[[extra.other_ring]]
+name = "neocities"
+url = "https://neocities.org"
+button = "images/web_buttons/misc/neocities_button.gif"
 
 [[extra.other_ring]]
 name = "lair-button"
