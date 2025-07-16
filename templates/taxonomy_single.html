@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
-{% block title %}Posts tagged "{{ term.name }}" | {{ config.title }}{% endblock title %}
+{% block title %}Posts tagged &#34;{{ term.name }}&#34; | {{ config.title }}{% endblock title %}
 
-{% block description %}All posts tagged with "{{ term.name }}" on {{ config.title }}{% endblock description %}
+{% block description %}All posts tagged with &#34;{{ term.name }}&#34; on {{ config.title }}{% endblock description %}
 
 {% block content %}
-    <h1>Posts tagged "{{ term.name }}"</h1>
+    <h1>Posts tagged &#34;{{ term.name }}&#34;</h1>
     
     <div class="tag-description">
         <p>{{ term.pages | length }} post{% if term.pages | length != 1 %}s{% endif %} tagged with <span class="tag">{{ term.name }}</span></p>
@@ -34,15 +34,15 @@
             {% endif %}
             
             <div class="read-more">
-                <a href="{{ page.permalink }}">Read more →</a>
+                <a href="{{ page.permalink }}">Read more</a>
             </div>
         </article>
         {% endfor %}
     </div>
     
     <div class="navigation-links">
-        <a href="/tags/">← All Tags</a>
+        <a href="/tags/">All Tags</a>
         |
-        <a href="/blog/">← Back to Blog</a>
+        <a href="/blog/">Back to Blog</a>
     </div>
 {% endblock content %}
