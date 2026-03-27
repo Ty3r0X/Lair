@@ -28,11 +28,6 @@ body {
     line-height: $line-height-base;
 }
 
-body.page-home,
-body.page-about {
-    background: url("images/bg.gif");  // Animated background for home & about
-}
-
 // Typography
 h1, h2, h3, h4, h5, h6 {
     color: $color-primary;

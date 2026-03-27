@@ -9,10 +9,11 @@ IHdpdGhvbGQsIEkgd2lsbCBwcmV2YWlsIGluIHRoZSBkYXJrbmVzcy4K -->
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <meta name="description" content="{% block description %}{{ config.description }}{% endblock description %}" />
     <meta name="author" content="{{ config.author }}" />
-   <link href="{{ get_url(path='main.css') }}" rel="stylesheet" type="text/css" /> 
+    <link href="{{ get_url(path='main.css') }}" rel="stylesheet" type="text/css" /> 
+    <link rel="icon" href="{{ get_url(path='images/ty3r0x_eye_svg.svg') }}" type="image/svg+xml" />
     {% block extra_head %}{% endblock extra_head %}
 </head>
-<body class="{% if section and not section.ancestors %}page-home{% elif page and page.slug == 'about' %}page-about{% else %}page-other{% endif %}">
+<body class="page">
     <div class="outer">
         <div class="inner">
             <!-- Header with navigation -->
