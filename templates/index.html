@@ -2,16 +2,24 @@
 
 {% block title %}{{ section.title | default(value=config.title) }}{% endblock title %}
 
+{% block extra_head %}
+<style>
+	body.page {
+		background-image: url({{ get_url(path='images/bg.gif') }});
+	}
+</style>
+{% endblock extra_head %}
+
 {% block content %}
     <img alt="ty3r0x-eye" class="pfp" src="{{ get_url(path='images/ty3r0x_eye_svg.svg') }}" />
     <h1>{{ section.extra.heading | default(value="Follow The Eye!") }}</h1>
-    
+
     <div class="content-1">
         <a href="{{ get_url(path='misc/keys/Ty3r0X-PGP.asc') }}">GPG Key</a> |
         <a href="{{ get_url(path='@/about.md') }}">About me</a> |
 	<a href="{{ get_url(path='@/contact.md') }}">Contact</a>
     </div>
-    
+
     {% if section.extra.friends_ring %}
        <div class="webring-buttons">
         {% for member in section.extra.friends_ring %}
@@ -46,13 +54,13 @@
         {% endfor %}
     </div> 
     {% endif %}
-    
+
     {% if section.content %}
     <div class="main-content">
         {{ section.content | safe }}
     </div>
     {% endif %}
-    
+
     <noscript>
 	    <p>Rest here, legend, we don't do RCEs here!</p>
     </noscript>
