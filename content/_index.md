@@ -123,5 +123,10 @@ button = "images/web_buttons/misc/ty3r0x-banner.gif"
 name = "xhtml-compliance"
 url = "http://validator.w3.org/check?uri=https://ty3r0x.chaox.ro"
 button = "images/web_buttons/misc/xhtml.svg"
+
+[[extra.other_ring]]
+name = "512kb-club"
+url = "http://512kb.club"
+button = "images/web_buttons/misc/blue-team.gif"
 +++
 

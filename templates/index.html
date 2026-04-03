@@ -3,7 +3,7 @@
 {% block title %}{{ section.title | default(value=config.title) }}{% endblock title %}
 
 {% block extra_head %}
-<style>
+<style type="text/css">
 	body.page {
 		background-image: url({{ get_url(path='images/bg.gif') }});
 	}

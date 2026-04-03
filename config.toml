@@ -24,9 +24,6 @@ minify_html = false
 # copied over to the `public` directory.
 ignored_content = []
 
-# When set to "true", feeds are automatically generated.
-generate_feeds = true
-
 # The filenames to use for the feeds. Used as the template filenames, too.
 feed_filenames = ["atom.xml"]
 
@@ -42,13 +39,6 @@ hard_link_static = true
 
 # The taxonomies to be rendered for the site and their configuration of the default languages
 taxonomies = [{ name = "tags", feed = true }]
-
-# Whether to build a search index to be used later on by a JavaScript library
-build_search_index = false
-
-[markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
 
 [extra]
 # Custom variables can be defined here for use in templates
