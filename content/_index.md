@@ -17,6 +17,11 @@ url = "http://northrend.net"
 button = "images/web_buttons/friends/northrend.gif"
 
 [[extra.friends_ring]]
+name = "alphara"
+url = "http://alphara.art"
+button = "images/web_buttons/friends/alphara.png"
+
+[[extra.friends_ring]]
 name = "mcsky"
 url = "http://blog.mcsky.ro"
 button = "images/web_buttons/friends/mcsky.gif"

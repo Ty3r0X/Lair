@@ -211,16 +211,16 @@
         padding: $spacing-md;
         max-width: 90%;
     }
-    
+
     .blog-posts,
     .blog-post {
         max-width: 90%;
     }
-    
+
     .post-content {
         font-size: 1em;
     }
-    
+
     .tag-cloud {
         gap: 0.8em;
     }
@@ -231,7 +231,7 @@
     .content {
         padding: $spacing-lg $spacing-md;
     }
-    
+
     // Enhanced hover effects for desktop
     .post-preview {
         &:hover {
@@ -239,17 +239,17 @@
             box-shadow: 0 4px 12px rgba($color-primary, 0.2);
         }
     }
-    
+
     .tag:hover {
         transform: translateY(-2px);
         box-shadow: 0 2px 8px rgba($color-tag-bg, 0.3);
     }
-    
+
     .card:hover {
         transform: translateY(-3px);
         box-shadow: 0 6px 16px rgba($color-primary, 0.3);
     }
-    
+
     // Show additional content on larger screens
     .desktop-only {
         display: block;
@@ -262,7 +262,7 @@
     .tag, .btn, .card {
         border-width: 1px;
     }
-    
+
     // Optimize images for high DPI
     img {
         image-rendering: -webkit-optimize-contrast;
@@ -275,12 +275,12 @@
     .header {
         height: 50px;
     }
-    
+
     .content {
         margin-top: 50px;
         padding: $spacing-sm;
     }
-    
+
     .post-header h1 {
         font-size: 1.8em;
     }
@@ -293,7 +293,7 @@
         background: white !important;
         text-shadow: none !important;
     }
-    
+
     .header,
     .footer,
     .navigation-links,
@@ -301,31 +301,31 @@
     .back-to-blog {
         display: none;
     }
-    
+
     .content {
         margin: 0;
         padding: 0;
         max-width: none;
     }
-    
+
     .post-content {
         font-size: 12pt;
         line-height: 1.4;
     }
-    
+
     h1, h2, h3 {
         page-break-after: avoid;
     }
-    
+
     .post-preview,
     .tag-cloud {
         page-break-inside: avoid;
     }
-    
+
     a {
         text-decoration: underline;
     }
-    
+
     a[href]:after {
         content: " (" attr(href) ")";
         font-size: 0.8em;
@@ -340,7 +340,7 @@
         animation-iteration-count: 1 !important;
         transition-duration: 0.01ms !important;
     }
-    
+
     .post-preview:hover,
     .tag:hover,
     .card:hover {
@@ -361,14 +361,30 @@
     .tag {
         border: 2px solid $color-white;
     }
-    
+
     .post-preview {
         border: 1px solid $color-white;
         padding: $spacing-md;
         margin-bottom: $spacing-lg;
     }
-    
+
     a {
         text-decoration: underline;
+    }
+}
+
+// Responsive Table Handling
+@include mobile {
+    table {
+        display: block;
+        width: 100%;
+        overflow-x: auto; // Horizontal scroll for small screens
+        -webkit-overflow-scrolling: touch;
+        font-size: 0.85em;
+
+        th, td {
+            padding: $spacing-sm;
+            min-width: 120px; // Ensures content doesn't squash too much
+        }
     }
 }
