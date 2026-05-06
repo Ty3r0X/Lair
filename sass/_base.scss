@@ -202,3 +202,84 @@ img {
     background: $color-primary;
     color: $color-white;
 }
+
+// Enhanced Table Components
+table {
+    width: 100%;
+    border-collapse: separate; // Used for border-radius on container
+    border-spacing: 0;
+    margin: $spacing-lg 0;
+    font-family: $font-family;
+    background-color: rgba($color-black, 0.4);
+    border: 1px solid $color-border;
+    border-radius: $border-radius-large;
+    overflow: hidden; // Ensures background colors don't bleed past rounded corners
+    backdrop-filter: $backdrop-blur;
+    box-shadow: $box-shadow;
+
+    // Header Styling
+    thead {
+        background-color: rgba(0, 0, 0, 0.8);
+
+        th {
+            color: $color-text-light;
+            letter-spacing: 1px;
+            font-size: $font-size-small;
+            padding: $spacing-md;
+            text-align: left;
+            border-bottom: 2px solid $color-accent;
+            text-shadow: $text-shadow;
+        }
+    }
+
+    // Body Styling
+    tbody {
+        tr {
+            transition: background-color $transition-fast;
+            border-bottom: 1px solid rgba($color-border, 0.5);
+
+            &:last-child {
+                border-bottom: none;
+            }
+
+            // Zebra Striping using established accent color
+            &:nth-child(even) {
+                background-color: rgba($color-primary, 0.05);
+            }
+
+            // Hover state consistent with .post-preview and .card
+            &:hover {
+                background-color: rgba($color-primary, 0.15);
+
+                td {
+                    color: $color-white;
+                }
+            }
+        }
+
+        td {
+            padding: $spacing-md;
+            color: $color-white;
+            line-height: $line-height-tight;
+            border-bottom: 1px solid rgba($color-border, 0.3);
+
+            // Supporting Monospace for data values
+            &.mono {
+                font-family: $font-family-mono;
+                font-size: $font-size-code;
+            }
+        }
+    }
+
+    // Footer Styling
+    tfoot {
+        background-color: rgba($color-dark-bg, 0.5);
+        font-size: $font-size-small;
+        font-style: italic;
+
+        td {
+            padding: $spacing-sm $spacing-md;
+            border-top: 1px solid $color-border;
+        }
+    }
+}
