@@ -17,6 +17,17 @@
             margin-bottom: 0;
         }
     }
+
+    a {
+        color: $color-text-light;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $color-accent;
+        }
+    }
 }
 
 // Blog Posts Container
@@ -65,7 +76,8 @@
     align-items: center;
     gap: $spacing-sm;
     
-    time {
+    time,
+    .post-date {
         font-weight: bold;
     }
     
@@ -173,6 +185,17 @@
 .post-content {
     line-height: $line-height-loose;
     text-align: left;
+    
+    a {
+        color: $color-text-light;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $color-accent;
+        }
+    }
     
     h2, h3, h4 {
         margin-bottom: 1em;

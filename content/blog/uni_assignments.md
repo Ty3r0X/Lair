@@ -49,3 +49,7 @@ and willing to screw their life, it goes downhill from here.
 
 This has been my reflection these days. I will have to endure this 2 more years. It will be tough.
 But it will finish...
+
+---
+
+*Published on: 2025-10-26*
