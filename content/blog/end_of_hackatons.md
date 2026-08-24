@@ -58,3 +58,7 @@ As for the hackatons themselves, another problem still remaining is the competit
 to use less ethical means to win. My take is to ease on corporate "sponsorship" by minimizing their influence,
 but still get what they want, which is potential talent, and make hackatons what they initially were, a social
 gathering for people to have an excuse on doing things.
+
+---
+
+*Published on: 2026-04-03*

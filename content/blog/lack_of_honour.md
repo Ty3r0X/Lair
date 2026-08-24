@@ -25,3 +25,7 @@ Many people I know! Ranging from executives at big tech firms, to university pro
 ---
 
 Now, I do not despise people doing honest work, real talk, they're the reason society still hasn't imploded. But sometimes work isn't the same, there is a fine curb between actually delivering added value and just being exploited, being consumed like a used soda can. Just look at the massive layoffs from big tech, big software engineers who proven themselves are all at risk. Yikes! All I'm saying is that it's never wrong putting uni work in a lower position and prioritizing learning other fun stuff, that's how you differentiate from others.
+
+---
+
+*Published on: 2026-05-15*

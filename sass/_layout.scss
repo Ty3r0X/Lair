@@ -166,6 +166,17 @@
         margin-bottom: 1em;
         line-height: $line-height-base;
     }
+
+    a {
+        color: $color-text-light;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $color-accent;
+        }
+    }
     
     ul, ol {
         margin-bottom: 1em;
@@ -183,6 +194,19 @@
     
     code {
         border: none;
+    }
+}
+
+.main-content {
+    a {
+        color: $color-text-light;
+        text-decoration: underline;
+        text-underline-offset: 2px;
+        transition: color $transition-fast;
+
+        &:hover {
+            color: $color-accent;
+        }
     }
 }
 

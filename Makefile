@@ -12,4 +12,4 @@ build:
 
 convert:
 	find $(BUILD_DIR) -name "*.html" -exec sh -c 'mv "$$1" "$${1%.html}.xhtml"' _ {} \;
-	find $(BUILD_DIR) -type f \( -name "*.xhtml" -o -name "*.xml" \) -exec sed -i 's/\.html"/.xhtml"/g; s/\.html#/.xhtml#/g' {} +
+	find $(BUILD_DIR) -type f \( -name "*.xhtml" -o -name "*.xml" \) -exec sed -i 's/\.html"/.xhtml"/g; s/\.html#/.xhtml#/g; s/ data-lang="[^"]*"//g' {} +
