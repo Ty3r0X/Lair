@@ -32,7 +32,10 @@ jobs:
             sed \
             rsync \
             jq
-      - uses: actions/checkout@v4
+      - name: Checkout latest git snapshot`
+        uses: actions/checkout@v4
+        with:
+          lfs: true
       - name: Install Zola
         env:
           ZOLA_VERSION: "0.22.1"
