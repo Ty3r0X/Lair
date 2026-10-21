@@ -51,6 +51,11 @@ name = "foreverlikethis"
 url = "http://foreverliketh.is"
 button = "images/web_buttons/friends/foreverlikethis.png"
 
+[[extra.friends_ring]]
+name = "para"
+url = "http://para.mohrie.net"
+button = "images/web_buttons/friends/para.png"
+
 [[extra.other_ring]]
 name = "crxn"
 url = "http://deavmi.assigned.network/projects/crxn/"
