@@ -21,6 +21,12 @@ jobs:
             port: 22
             user: ${{ vars.USER_GETIMISKON }}
             path: ${{ vars.PATH_GETIMISKON }}
+          - name: para
+            url: "https://ty3r0x.mohrie.net"
+            host: ${{ vars.HOST_PARA }}
+            port: 22
+            user: ${{ vars.USER_PARA }}
+            path: ${{ vars.PATH_PARA }}
     steps:
       - name: Install system dependencies
         run: |
@@ -32,7 +38,7 @@ jobs:
             sed \
             rsync \
             jq
-      - name: Checkout latest git snapshot`
+      - name: Checkout latest git snapshot
         uses: actions/checkout@v4
         with:
           lfs: true
@@ -51,12 +57,28 @@ jobs:
         env:
           KEY_CHAOX: ${{ secrets.SSHKEY_CHAOX }}
           KEY_CATTO: ${{ secrets.SSHKEY_GETIMISKON }}
-        run: |-
+          KEY_PARA: ${{ secrets.SSHKEY_PARA }}
+        run: |
           mkdir -p ~/.ssh
-          if [ "${{ matrix.name }}" = "chaox" ]; then
-            echo "$KEY_CHAOX" > ~/.ssh/id_rsa
-          else
-            echo "$KEY_CATTO" > ~/.ssh/id_rsa
-          fi
-          chmod 600 ~/.ssh/id_rsa
-          rsync -avz --delete -e "ssh -p ${{ matrix.port }} -o StrictHostKeyChecking=no" ./public/ ${{ matrix.user }}@${{ matrix.host }}:${{ matrix.path }}/
+
+          case "${{ matrix.name }}" in
+            chaox)
+              echo "$KEY_CHAOX" > ~/.ssh/id_cicd
+              ;;
+            catto)
+              echo "$KEY_CATTO" > ~/.ssh/id_cicd
+              ;;
+            para)
+              echo "$KEY_PARA" > ~/.ssh/id_cicd
+              ;;
+            *)
+              echo "Unknown matrix target: ${{ matrix.name }}" >&2
+              exit 1
+              ;;
+          esac
+
+          chmod 600 ~/.ssh/id_cicd
+
+          rsync -avz --delete \
+            -e "ssh -i ~/.ssh/id_cicd -p ${{ matrix.port }} -o StrictHostKeyChecking=no" \
+            ./public/ "${{ matrix.user }}@${{ matrix.host }}:${{ matrix.path }}/"
