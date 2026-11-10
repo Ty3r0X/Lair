@@ -38,9 +38,8 @@
 
 // Post Preview
 .post-preview {
-    margin-bottom: 3em;
-    padding-bottom: 2em;
-    border-bottom: 1px solid $color-border;
+    margin-bottom: 1em;
+    padding-bottom: 0.3em;
     transition: transform $transition-fast;
     
     &:last-child {
@@ -53,7 +52,7 @@
     
     h2 {
         margin-bottom: 0.5em;
-        font-size: 1.8em;
+        font-size: 1.3em;
         
         a {
             color: $color-primary;
@@ -106,33 +105,6 @@
         
         &:last-child {
             margin-bottom: 0;
-        }
-    }
-}
-
-// Read More Link
-.read-more {
-    text-align: right;
-    
-    a {
-        color: $color-primary;
-        font-weight: bold;
-        transition: color $transition-fast;
-        display: inline-flex;
-        align-items: center;
-        
-        &:hover {
-            color: $color-accent;
-        }
-        
-        &:after {
-            content: '→';
-            margin-left: $spacing-xs;
-            transition: transform $transition-fast;
-        }
-        
-        &:hover:after {
-            transform: translateX(3px);
         }
     }
 }

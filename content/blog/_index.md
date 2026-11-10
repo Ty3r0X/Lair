@@ -7,6 +7,4 @@ sort_by = "date"
 page_template = "blog-post.html"
 +++
 
-Welcome to my digital brain dump! Here I post unfiltered opinions, ideas, and whatever comes up to my head. Take a look around!
-
-*Fair warning: Posts may contain traces of caffeine-induced rambling, a bit of swearing and a lot of hot takes.* 
+In some occasions I feel the inspiration to dump some ideas and projects here. Due to a busy routine, don't expect this place to be active.
